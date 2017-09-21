@@ -43,27 +43,33 @@ class Board extends React.Component {
     }
   }
   renderSquare(i,j) {
-    return <Square value={this.props.squares[i][j]} onClick={() => this.props.onClick(i,j)}/>;
+    return <Square key={[i,j]} value={this.props.squares[i][j]} onClick={() => this.props.onClick(i,j)}/>;
+  }
+
+  renderRow(i) {
+    const row = [];
+
+    for(let j = 0; j<3; j++) {
+      row.push(this.renderSquare(i,j));
+    }
+
+    return row;
   }
 
   render() {
+    const rows = [];
+
+    for(let i = 0; i<3; i++) {
+      rows.push(
+        <div key={"row-" + i} className="board-row">
+          {this.renderRow(i)}
+        </div>
+      )
+    }
+
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0,0)}
-          {this.renderSquare(0,1)}
-          {this.renderSquare(0,2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(1,0)}
-          {this.renderSquare(1,1)}
-          {this.renderSquare(1,2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(2,0)}
-          {this.renderSquare(2,1)}
-          {this.renderSquare(2,2)}
-        </div>
+        {rows}
       </div>
     );
   }
@@ -116,7 +122,7 @@ class Game extends React.Component {
         'Move #' + move :
         'Game start';
       return (
-        <li key={move} className={move == this.state.stepNumber ? "highlight" : ""}>
+        <li key={move} className={move === this.state.stepNumber ? "highlight" : ""}>
           <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
         </li>
       );
